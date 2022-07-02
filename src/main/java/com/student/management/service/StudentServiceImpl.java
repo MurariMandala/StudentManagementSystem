@@ -1,19 +1,11 @@
 package com.student.management.service;
 
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -24,13 +16,10 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ObjectUtils;
 
 import com.opencsv.CSVWriter;
@@ -189,27 +178,29 @@ public class StudentServiceImpl implements StudentService{
 	public void generateCsvFile(HttpServletResponse response,HttpServletRequest request) throws IOException {
 		try {
 			response.setContentType("application/zip");
-	         response.setHeader("Content-Disposition", "attachment; filename=TestReport.zip");
-		    OutputStream servletOutputStream = response.getOutputStream(); // retrieve OutputStream from HttpServletResponse
-		    ZipOutputStream zos = new ZipOutputStream(servletOutputStream); // create a ZipOutputStream from servletOutputStream
-		    List<Student> students = studentRepo.findAll();
-		    System.out.println("executed...");
-		    int count = 0;    
-		    for(int i=0; i<2 ; i++) {
-		    	String filename = "file-" + ++count  + ".csv";
-		    	ZipEntry entry = new ZipEntry(filename);
-		    	 zos.putNextEntry(entry);
-		    	 CSVWriter writer = new CSVWriter(new OutputStreamWriter(zos));
-		    	 for(Student stu : students) {
-		    		 String[] s = (stu.getId()+","+stu.getName()+","+stu.getEmailAddress()).split(",");
-		    		 writer.writeNext(s); 
-		    		 writer.flush();
-		    	 }
-		    	 zos.closeEntry(); 
-		    	 
-		    }
+			response.setHeader("Content-Disposition", "attachment; filename=TestReport.zip");
+			OutputStream servletOutputStream = response.getOutputStream(); // retrieve OutputStream from
+																			// HttpServletResponse
+			ZipOutputStream zos = new ZipOutputStream(servletOutputStream); // create a ZipOutputStream from
+																			// servletOutputStream
+			List<Student> students = studentRepo.findAll();
+			System.out.println("executed...");
+			int count = 0;
+			for (int i = 0; i < 2; i++) {
+				String filename = "file-" + ++count + ".csv";
+				ZipEntry entry = new ZipEntry(filename);
+				zos.putNextEntry(entry);
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(zos));
+				for (Student stu : students) {
+					String[] s = (stu.getId() + "," + stu.getName() + "," + stu.getEmailAddress()).split(",");
+					writer.writeNext(s);
+					writer.flush();
+				}
+				zos.closeEntry();
 
-		    zos.close(); 
+			}
+
+			zos.close();
 		} catch (Exception e) {
 		  
 		}

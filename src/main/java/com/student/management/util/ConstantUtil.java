@@ -2,6 +2,7 @@ package com.student.management.util;
 
 public class ConstantUtil {
 	public static final String STATUS_ACTIVE = "Active";
+	public static final String STATUS_INACTIVE = "Inactive";
 	public static final String STATUS_FAILURE = "Failure";
 	public static final String STUDENT_ALREADY_EXIST = "student record already exist.";
 	public static final String STATUS_SUCCESS = "Success";
